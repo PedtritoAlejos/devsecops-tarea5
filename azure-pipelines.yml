@@ -34,7 +34,7 @@ stages:
 #       artifact: Jar
 
 - stage: Review_SAST
-  dependsOn: Build
+  #dependsOn: Build
   
   jobs:
   - job: sonar
