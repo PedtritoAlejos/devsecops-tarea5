@@ -88,8 +88,10 @@ stages:
          mavenAuthenticateFeed: false
          effectivePomSkip: false
          sonarQubeRunAnalysis: false
-      
 
+     - script: |
+          ls    
+      
      - task: dependency-check-build-task@6
        inputs:
          projectName: 'spring-boot-kubernetes'
