@@ -76,7 +76,7 @@ stages:
          projectName: 'spring-boot-kubernetes'
          scanPath: 'target/*.jar'
          format: 'HTML, JSON'
-         failOnCVSS: '10'
+         failOnCVSS: '3'
          
 
 
