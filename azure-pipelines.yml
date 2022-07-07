@@ -6,35 +6,15 @@
 trigger:
 - master
 
-#pool: Default
 pool: Azure Pipelines
 variables:
 - group: sonarcloud-properties
   
 stages:
 
-# - stage: Build
-#   jobs:
-#   - job: build
-#     displayName: 'Build'
-#     steps:
-#     - task: Gradle@3
-#       inputs:
-#         gradleWrapperFile: 'gradlew'
-#         tasks: 'build'
-#         publishJUnitResults: false
-#         javaHomeOption: 'JDKVersion'
-#         sonarQubeRunAnalysis: false
-#         spotBugsAnalysis: false
-#     - task: CmdLine@2
-#       inputs:
-#        script: ls -l build/libs/spring-boot-kubernetes-0.0.1-SNAPSHOT.jar
-
-#     - publish: $(System.DefaultWorkingDirectory)/build/libs/
-#       artifact: Jar
 
 - stage: Review_SAST
-  #dependsOn: Build
+ 
   
   jobs:
   - job: sonar
@@ -48,15 +28,7 @@ stages:
           projectName: '$(sonarCloudProjectName)'
         displayName: 'Preparing Sonarqube Environment'
     
-      # - task: Gradle@3
-      #   inputs:
-      #     gradleWrapperFile: 'gradlew'
-      #     tasks: "sonarqube"
-      #     javaHomeOption: 'JDKVersion'
-      #     sonarQubeRunAnalysis: true
-      #     sqGradlePluginVersionChoice: 'specify'
-      #     sonarQubeGradlePluginVersion: '3.3'
-      #   displayName: 'Analyze current Branch'
+
       - task: Maven@3
         inputs:
           mavenPomFile: 'pom.xml'
@@ -67,7 +39,7 @@ stages:
           effectivePomSkip: false
           sonarQubeRunAnalysis: true
           sqMavenPluginVersionChoice: 'latest'
-
+          
   
       - task: SonarCloudPublish@1
         inputs:
@@ -80,14 +52,12 @@ stages:
           organization: '$(sonarCloudOrganization)'
 
 - stage: Review_SCA
-  #dependsOn: Review_SAST
+
 
   jobs:
   - job: sca
     displayName: Review SCA
     steps:
-    #  - download: current
-    #    artifact: Jar
 
      - task: Maven@3
        inputs:
@@ -100,14 +70,12 @@ stages:
          effectivePomSkip: false
          sonarQubeRunAnalysis: false
 
-     - script: |
-          ls    
       
      - task: dependency-check-build-task@6
        inputs:
          projectName: 'spring-boot-kubernetes'
          scanPath: 'target/*.jar'
-         format: 'HTML'
+         format: 'HTML, JSON'
          failOnCVSS: '10'
          
 
